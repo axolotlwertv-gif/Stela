@@ -750,6 +750,7 @@ fn linux_7_0_btusb_mediatek_entries_are_candidates_with_wideband_speech() {
         (0x0489, 0xe135),
         (0x0489, 0xe158),
         (0x04ca, 0x3801),
+        (0x04ca, 0x3802),
         (0x13d3, 0x3620),
         (0x13d3, 0x3621),
         (0x13d3, 0x3622),
@@ -802,4 +803,29 @@ fn the_bare_metal_mt7925_registers_select_its_image_and_binding() {
         identity.revision_label(),
         "mt79xx-v1:legacy-00004254:device-00007925:firmware-00004200:flavor-00000310"
     );
+}
+
+#[test]
+fn lite_on_mt7921_registers_select_mt7961_firmware() {
+    let usb = UsbIdentity {
+        vendor: 0x04ca,
+        product: 0x3802,
+        revision: 0x0100,
+    };
+
+    assert!(usb.candidate() && usb.wideband_speech());
+
+    let identity = Identity::select(usb, 0, 0x7961, 1, 0x18).unwrap();
+
+    assert_eq!(identity.chip, Chip::Mt7961);
+    assert_eq!(
+        identity.firmware_name(),
+        "mediatek/BT_RAM_CODE_MT7961_1_2_hdr.bin"
+    );
+    assert_eq!(usb.hardware_label(), "usb:04ca:3802:0100");
+
+    assert!(matches!(
+        Identity::select(usb, 0, 0x7961, 1, 0x80),
+        Err(Error::Unsupported(_))
+    ));
 }
