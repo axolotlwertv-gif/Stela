@@ -3360,7 +3360,8 @@ mod tests {
         assert_eq!(plan.selections[0].request.target.revision, live);
         assert_eq!(plan.artifacts().len(), 2);
         let mt7961_image = "mediatek/BT_RAM_CODE_MT7961_1_2_hdr.bin";
-        let mt7961_live = "mt79xx-v1:legacy-00000000:device-00007961:firmware-00008a01:flavor-00000000";
+        let mt7961_live =
+            "mt79xx-v1:legacy-00000000:device-00007961:firmware-00008a01:flavor-00000000";
         let mt7961_plan = Plan::select(&mediatek_bluetooth(
             mt7961_image,
             "usb:04ca:3802:0100",
@@ -3368,7 +3369,10 @@ mod tests {
         ))
         .unwrap();
         assert_eq!(mt7961_plan.selections[0].recipe.image.member, mt7961_image);
-        assert_eq!(mt7961_plan.selections[0].request.target.revision, mt7961_live);
+        assert_eq!(
+            mt7961_plan.selections[0].request.target.revision,
+            mt7961_live
+        );
 
         let recipe = plan.selections[0].recipe;
         assert_eq!(
